@@ -1,0 +1,25 @@
+{
+  "name": "cordova-plugin-flybuy",
+  "version": "2.0.0",
+  "description": "Flybuy Cordova Plugin",
+  "cordova": {
+    "id": "cordova-plugin-flybuy",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/g8z/flybuy-cordova-plugin.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/g8z/flybuy-cordova-plugin/issues"
+  },
+  "homepage": "https://github.com/g8z/flybuy-cordova-plugin#readme"
+}
