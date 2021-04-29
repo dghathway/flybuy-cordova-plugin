@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dghathway/flybuy-cordova-plugin.git"
+    "url": "git+https://github.com/g8z/flybuy-cordova-plugin.git"
   },
   "keywords": [
     "ecosystem:cordova",
@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dghathway/flybuy-cordova-plugin/issues"
+    "url": "https://github.com/g8z/flybuy-cordova-plugin/issues"
   },
-  "homepage": "https://github.com/dghathway/flybuy-cordova-plugin#readme"
+  "homepage": "https://github.com/g8z/flybuy-cordova-plugin#readme"
 }
