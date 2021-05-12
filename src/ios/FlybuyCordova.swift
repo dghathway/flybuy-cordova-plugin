@@ -78,6 +78,25 @@ typealias PluginResultType = [AnyHashable : Any]
         
         FlyBuy.Core.customer.create(customerInfo, termsOfService: true, ageVerification: true)  { self.handlePluginResult(result: $0, error: $1, command: command) }
     }
+
+    @objc(updateCustomer:)
+    func updateCustomer(command: CDVInvokedUrlCommand) {
+        guard let customerData = command.argument(at: 0) as? NSDictionary else {
+            let pluginResult = CDVPluginResult(status: .error, messageAs: "No parameters passed to function")
+            
+            return self.commandDelegate!.send(pluginResult, callbackId: command.callbackId)
+        }
+        
+        let customerInfo = CustomerInfo(name: customerData["name"] as! String,
+                                        carType: customerData["carType"] as? String,
+                                        carColor: customerData["carColor"] as? String,
+                                        licensePlate: customerData["licensePlate"] as? String,
+                                        phone: customerData["phone"] as? String)
+        
+        FlyBuy.Core.customer.update(customerInfo){ (customer, error) -> (Void) in
+            self.handlePluginResult(result: customer, error: error, command: command)
+        }
+    }
     
     @objc(getCurrentCustomer:)
     func getCurrentCustomer(command: CDVInvokedUrlCommand) {
