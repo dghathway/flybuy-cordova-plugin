@@ -84,6 +84,8 @@ public class FlybuyCordova extends CordovaPlugin {
       getConfig(callbackContext);
     else if (action.equals("createCustomer"))
       createCustomer(args, callbackContext);
+    else if (action.equals("updateCustomer"))
+      updateCustomer(args, callbackContext);
     else if (action.equals("getCurrentCustomer"))
       getCurrentCustomer(callbackContext);
     else if (action.equals("createOrder"))
@@ -381,6 +383,31 @@ public class FlybuyCordova extends CordovaPlugin {
     });
   }
 
+  public void updateCustomer(final JSONArray args, final CallbackContext callbackContext) {
+    final CustomerInfo customerInfo;
+    try {
+      JSONObject customerJSON = args.getJSONObject(0);
+
+      customerInfo = new CustomerInfo(customerJSON.getString("name"), customerJSON.getString("phone"),
+          customerJSON.getString("carType"), customerJSON.getString("carColor"),
+          customerJSON.getString("licensePlate"));
+
+    } catch (JSONException exception) {
+      Timber.e(exception, "Error parsing customer JSON");
+      callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, exception.getMessage()));
+      return;
+    }
+    cordova.getThreadPool().execute(new Runnable() {
+      @Override
+      public void run() {
+        FlyBuyCore.customer.update(customerInfo, (customer, sdkError) -> {
+          sendResult(customer, sdkError, callbackContext);
+          return null;
+        });
+      }
+    });
+  }
+
   public void getPermissionsStatus(final JSONArray args, final CallbackContext callbackContext) throws JSONException {
     String str;
     boolean foreground = cordova.hasPermission("android.permission.ACCESS_FINE_LOCATION");
@@ -490,28 +517,28 @@ public class FlybuyCordova extends CordovaPlugin {
           "State passed to function is not of the form <Entity>.<State>, i.e. customer.waiting"));
     }
     switch (strings[0]) {
-    case "customer":
-      String customerState = CustomerState.CREATED;
-      if (strings.length > 1) {
-        customerState = getCustomerState(strings[1]);
-      }
+      case "customer":
+        String customerState = CustomerState.CREATED;
+        if (strings.length > 1) {
+          customerState = getCustomerState(strings[1]);
+        }
 
-      FlyBuyCore.orders.updateCustomerState(orderId, customerState, (order, error) -> {
-        sendResult(order, error, callbackContext);
-        return null;
-      });
-      break;
-    case "order":
-      String orderState = OrderState.CREATED;
-      if (strings.length > 1) {
-        orderState = getOrderState(strings[1]);
-      }
+        FlyBuyCore.orders.updateCustomerState(orderId, customerState, (order, error) -> {
+          sendResult(order, error, callbackContext);
+          return null;
+        });
+        break;
+      case "order":
+        String orderState = OrderState.CREATED;
+        if (strings.length > 1) {
+          orderState = getOrderState(strings[1]);
+        }
 
-      FlyBuyCore.orders.updateState(orderId, orderState, (order, error) -> {
-        sendResult(order, error, callbackContext);
-        return null;
-      });
-      break;
+        FlyBuyCore.orders.updateState(orderId, orderState, (order, error) -> {
+          sendResult(order, error, callbackContext);
+          return null;
+        });
+        break;
     }
   }
 
@@ -522,18 +549,18 @@ public class FlybuyCordova extends CordovaPlugin {
     }
 
     switch (stateStr) {
-    case "created":
-      return OrderState.CREATED;
-    case "ready":
-      return OrderState.READY;
-    case "delayed":
-      return OrderState.DELAYED;
-    case "cancelled":
-      return OrderState.CANCELLED;
-    case "completed":
-      return OrderState.COMPLETED;
-    case "gone":
-      return OrderState.GONE;
+      case "created":
+        return OrderState.CREATED;
+      case "ready":
+        return OrderState.READY;
+      case "delayed":
+        return OrderState.DELAYED;
+      case "cancelled":
+        return OrderState.CANCELLED;
+      case "completed":
+        return OrderState.COMPLETED;
+      case "gone":
+        return OrderState.GONE;
     }
     return "Unknown";
   }
@@ -544,18 +571,18 @@ public class FlybuyCordova extends CordovaPlugin {
     }
 
     switch (stateStr) {
-    case "created":
-      return CustomerState.CREATED;
-    case "en_route":
-      return CustomerState.EN_ROUTE;
-    case "waiting":
-      return CustomerState.WAITING;
-    case "nearby":
-      return CustomerState.NEARBY;
-    case "arrived":
-      return CustomerState.ARRIVED;
-    case "completed":
-      return CustomerState.COMPLETED;
+      case "created":
+        return CustomerState.CREATED;
+      case "en_route":
+        return CustomerState.EN_ROUTE;
+      case "waiting":
+        return CustomerState.WAITING;
+      case "nearby":
+        return CustomerState.NEARBY;
+      case "arrived":
+        return CustomerState.ARRIVED;
+      case "completed":
+        return CustomerState.COMPLETED;
     }
     return "Unknown";
   }
