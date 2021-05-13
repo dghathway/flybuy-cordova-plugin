@@ -6,7 +6,7 @@
     "id": "cordova-plugin-flybuy",
     "platforms": [
       "android",
-      "io"
+      "ios"
     ]
   },
   "repository": {
