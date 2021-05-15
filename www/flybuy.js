@@ -50,6 +50,10 @@ flybuyExport.createCustomer = function(customer, callback, err) {
     exec('createCustomer', [customer], callback, err)
 }
 
+flybuyExport.updateCustomer = function(customer, callback, err) {
+  exec('updateCustomer', [customer], callback, err)
+}
+
 flybuyExport.getCurrentCustomer = function(callback, err) {
     exec('getCurrentCustomer', null, callback, err);
 }
