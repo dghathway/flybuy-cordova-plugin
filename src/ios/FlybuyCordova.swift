@@ -1,4 +1,5 @@
 import FlyBuy
+import FlyBuyPickup
 import CoreLocation
 
 typealias PluginResultType = [AnyHashable : Any]
@@ -19,6 +20,7 @@ typealias PluginResultType = [AnyHashable : Any]
     override func pluginInitialize() {
         assert(getKey() != nil)
         FlyBuy.Core.configure(["token": getKey() as Any])
+        FlyBuyPickup.Manager.shared.configure()
         locationManager = CLLocationManager()
     }
     

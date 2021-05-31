@@ -49,7 +49,6 @@ public class FlybuyCordova extends CordovaPlugin {
 
   private ArrayList<Integer> observedIds = new ArrayList<>();
   Gson gson;
-
   /*
    * For the purposes of Newk's, the main SDK functions we need to provide access
    * to are: FlyBuy.customer.create FlyBuy.customer.current FlyBuy.orders.create
@@ -116,6 +115,9 @@ public class FlybuyCordova extends CordovaPlugin {
   public void pluginInitialize() {
     String apiToken = preferences.getString("FLYBUY_ANDROID_API_KEY", null);
     FlyBuyCore.configure(cordova.getContext(), apiToken);
+    PickupManager.Companion.getInstance(null).configure(cordova.getContext());
+    PickupManager.Companion.getInstance(null).onLocationPermissionChanged();
+
     this.gson = new GsonBuilder().disableHtmlEscaping()
         .registerTypeAdapter(Instant.class, new JsonSerializer<Instant>() {
           public JsonElement serialize(Instant instant, Type type, JsonSerializationContext jsonSerializationContext) {
@@ -127,11 +129,12 @@ public class FlybuyCordova extends CordovaPlugin {
   public void onCreate(final JSONArray args, final CallbackContext callbackContext) throws JSONException {
     final String apiKey = args.getString(0);
     final Activity activity = this.cordova.getActivity();
-
     Handler handler = new Handler(Looper.getMainLooper());
     handler.post(new Runnable() {
       public void run() {
         FlyBuyCore.configure(activity, apiKey);
+
+        PickupManager.Companion.getInstance(null).configure(cordova.getContext());
         callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
       }
     });
@@ -344,6 +347,9 @@ public class FlybuyCordova extends CordovaPlugin {
     }
 
     FlyBuyCore.orders.create(siteId, partnerId, customerInfo, pickupWindow, null, null, (createdOrder, error) -> {
+
+      PickupManager.Companion.getInstance(null).onLocationPermissionChanged();
+
       FlyBuyCore.orders.fetch((orders, fetchOrdersError) -> {
         Order resultOrder = createdOrder;
         if (orders != null) {

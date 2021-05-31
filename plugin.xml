@@ -82,6 +82,7 @@
 
         <framework src="CoreLocation.framework" />
         <framework src="./src/ios/FlyBuy.framework" custom="true" embed="true"/>
+        <framework src="./src/ios/FlyBuyPickup.framework" custom="true" embed="true"/>
         <source-file src="src/ios/FlybuyCordova.swift" />
     </platform>
 </plugin>
